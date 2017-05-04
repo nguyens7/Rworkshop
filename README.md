@@ -1,7 +1,7 @@
 # Rworkshop
 Repository an introduction to R workshop series.  This series is for anyone who has an interest in learning how to program in R.  No previous coding experience knowledge is required. 
 
-##Organization
+## Organization
 The workshop is organized into four sessions and the content from each session is contained within the respective folders. Session topics are as follows:
 
 1. **Introduction to R**
