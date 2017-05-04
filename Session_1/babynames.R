@@ -112,7 +112,7 @@ df %>%
   filter(year %in% 1880:2015 & name %in% c("Ashley","Jessica","Emily",
                                          "Sarah","Samantha","Michael",
                                          "Christopher","Matthew","Joshua","Jacob"))%>%
-  group_by(name,sex,year)%>%
+  group_by(name,sex,year) %>%
   ggplot(aes(x = year, y = n, color = name))+
     geom_line()+
     facet_grid(~sex)
@@ -167,8 +167,8 @@ gender_plot + facet_grid(~sex)
 iris <- iris
 
 iris %>% 
-  ggplot(aes(x=Sepal.Length,y=Petal.Length,color=Species))+
-  geom_point(size=3)
+  ggplot(aes(x = Sepal.Length, y = Petal.Length, color = Species))+
+  geom_point(size = 3)
 
 
 
@@ -177,13 +177,13 @@ iris %>%
 df1 <- diamonds
 
 df1 %>%
-ggplot(aes(x=carat,y=price, color= cut)) +
+ggplot(aes(x = carat, y = price, color = cut)) +
   geom_point() +
   facet_grid(color~cut)
 
 
 df1 %>%
   ggplot()+
-  geom_point(aes(x=carat,y=price,color=cut))+
+  geom_point(aes(x = carat, y = price, color = cut))+
   facet_grid(~cut)
 
