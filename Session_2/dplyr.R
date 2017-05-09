@@ -3,12 +3,50 @@ rm(list=ls())
 graphics.off()
 
 # Load libraries
-library(tidyverse)
 library(cowplot)
+library(tidyverse)
 library(nycflights13)
 
+# Load in data from nycflights13
 flights <- flights
 planes <- planes
+weather <- weather
+airlines <- airlines
+
+# Filter ------------------------------------------------------------------
+
+UA <- flights %>%
+  filter(carrier == "UA")
+
+
+# Select ------------------------------------------------------------------
+
+flights_small <- flights %>%
+  select(year:carrier)
+
+# Rename ------------------------------------------------------------------
+
+flights1 <- flights %>% 
+  rename(date_time_hour = time_hour)
+ 
+
+# Arrange -----------------------------------------------------------------
+
+flights %>%
+  
+
+# Mutate ------------------------------------------------------------------
+
+flights %>%
+
+
+
+# Group by and Summarise --------------------------------------------------
+
+flights %>%
+  
+
+# Advanced dplyr ----------------------------------------------------------
 
 flights$month <- as.factor(flights$month)
 flights$carrier <- as.factor(flights$carrier)
@@ -16,13 +54,11 @@ flights$origin <- as.factor(flights$origin)
 flights$dest <- as.factor(flights$dest)
 
 flights %>% 
-
-flights %>% 
-  filter(dest %in% c("LAX","SFO")) %>% 
-  group_by(month,carrier,origin,dest) %>% 
+  filter(dest %in% c("LAX", "SFO")) %>% 
+  group_by(month,dest,carrier,origin) %>% 
   summarise(n = length(month)) %>% 
-  ggplot(aes(x = month, y = n, color = carrier,group = carrier, shape = dest))+
-  geom_point()+
-  geom_line()+
+  ggplot(aes(x = month, y = n, color = carrier, group = carrier, shape = dest))+
+  geom_point(size = 4)+
+  geom_line(size = 2)+
   facet_grid(origin~dest)
 

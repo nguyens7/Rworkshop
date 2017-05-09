@@ -1,3 +1,8 @@
+# To Clear working environment
+rm(list=ls())
+graphics.off()
+
+# Load libraries
 library(tidyverse)
 library(gapminder)
 
@@ -5,12 +10,44 @@ library(gapminder)
 setwd("~/Desktop")
 getwd()
 
-read_csv()
+
+# Importing data ----------------------------------------------------------
+
+read_csv("Antibiotics.csv")
+data <- read_csv("Antibiotics.csv")
+
+
+# Tidyr -------------------------------------------------------------------
+
+# 'Wide' data
+table4a
+
+# gather- makes 'wide' data 'long'
 
 table4a %>% 
-  gather(year,cases,2-3)
+  gather(year, cases, 2:3)
 
+
+# 'Long' data
+table2
+
+# Spread -makes 'long' data 'wide'
 table2 %>% 
   spread(type,count)
 
 
+# Make data from wide to long ---------------------------------------------
+
+long <- data %>%
+  gather()
+  
+
+# Split single column to multiple columns ---------------------------------
+
+split <- long %>%
+  separate()
+  
+
+# Export data -------------------------------------------------------------
+
+write_csv(split, "Tidy_antibiotics.csv")
