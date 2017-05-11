@@ -39,15 +39,16 @@ table2 %>%
 # Make data from wide to long ---------------------------------------------
 
 long <- data %>%
-  gather()
+  gather(organism, count, 2:10)
   
 
 # Split single column to multiple columns ---------------------------------
 
 split <- long %>%
-  separate()
+  separate(organism, into=c("Experiment", "Bacteria"),
+           sep = "_")
   
 
 # Export data -------------------------------------------------------------
 
-write_csv(split, "Tidy_antibiotics.csv")
+write_csv(split, "Tidy_demo_antibiotics.csv")
