@@ -1,7 +1,7 @@
-US Dental Schools,Average DAT (AA),Average GPA
+USDentalSchools,AverageDAT,AverageGPA
 University of Alabama at Birmingham School of Dentistry,21,3.71
 Arizona School of Dentistry and Oral Health,19,3.37
-Midwestern University College of Dental Medicine - Arizona,19.8,NA
+Midwestern University College of Dental Medicine - Arizona,19.8,
 Herman Ostrow School of Dentistry of the University of Southern California,20,3.5
 Loma Linda University School of Dentistry,19.9,3.46
 "University of California, Los Angeles School of Dentistry",22.6,3.94
@@ -10,7 +10,7 @@ University of the Pacific Arthur A. Dugoni School of Dentistry,21,3.5
 Western University of Health Sciences College of Dental Medicine,19,3.26
 The University of Colorado School of Dental Medicine,19.9,3.64
 University of Connecticut School of Dental Medicine,21,3.61
-Howard University College of Dentistry,17.9,NA
+Howard University College of Dentistry,17.9,
 Lake Erie College of Osteopathic Medicine School of Dental Medicine,19.3,3.69
 Nova Southeastern University College of Dental Medicine,20,3.67
 University of Florida College of Dentistry,20.3,3.8
