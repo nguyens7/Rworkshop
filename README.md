@@ -1,7 +1,7 @@
 # Rworkshop
 Repository an introduction to R workshop series.  This series is for anyone who has an interest in learning how to program in R.  No previous coding experience knowledge is required. 
 
-![Alt text](/Rworkshop/Introduction_to_R_workshop.pdf?raw=true "Flyer")
+![Flyer](/Rworkshop/Workshop_flyer.png?raw=true "Flyer")
 
 ## Organization
 The workshop is organized into four sessions and the content from each session is contained within the respective folders. Session topics are as follows:
