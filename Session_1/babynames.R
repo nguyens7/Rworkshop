@@ -12,10 +12,13 @@ babynames
 df <- babynames
 df
 
-
 # Filter ------------------------------------------------------------------
-sean <- df %>%
-  filter(name == "Sean")
+
+michael <- df %>%
+  filter(name == "Michael")
+
+Mike <- df %>%
+  filter(name == "Mike")
 
 mary <- df %>%
   filter(name == "Mary")
@@ -23,6 +26,15 @@ mary <- df %>%
 mary %>%
   ggplot(aes(x = year, y = n, color = sex))+
   geom_line()
+
+sean <- df %>%
+  filter(name == "Sean")
+
+sean_plot <- sean %>% 
+  ggplot(aes(x = year, y = n, color = sex)) +
+  geom_line()
+
+sean_plot
 
 shaun <- df %>%
   filter(name == "Shaun") %>%
@@ -38,6 +50,13 @@ shawn %>%
   ggplot(aes(x = year, y = n,color = sex))+
   geom_line()
 
+
+
+df %>% 
+  filter(name == "Keara" | name == "Bob" | name == "Anya")
+
+df %>% 
+  filter(name %in% c("Keara", "Bob", "Anya"))
 
 # Filter multiple criteria ------------------------------------------------
 
@@ -58,8 +77,7 @@ df %>%
 
 
 df %>%
-  filter(name == "Sean"|name == "Shaun"|name == "Shawn") %>%
-  group_by(year,name) %>%
+  filter(name == "Sean"|name == "Bob"|name == "Betty") %>%
   ggplot(aes(x = year, y = n, color = name)) +
   geom_line()+
   facet_grid(~sex)
@@ -80,11 +98,15 @@ df %>%
   geom_line()+
   scale_y_continuous(expand=c(0,0))
 
-df %>%
+taylor <- df %>%
   filter(name == "Taylor") %>%
   ggplot(aes(x = year, y = n, colour = sex))+
   geom_line()+
-  scale_y_continuous(expand=c(0,0))
+  scale_y_continuous(expand=c(0,0))+
+  ggtitle("Taylor title plot")
+
+taylor
+  
 
 df %>%
   filter(name == "Frankie") %>%
@@ -112,7 +134,6 @@ df %>%
   filter(year %in% 1880:2015 & name %in% c("Ashley","Jessica","Emily",
                                          "Sarah","Samantha","Michael",
                                          "Christopher","Matthew","Joshua","Jacob"))%>%
-  group_by(name,sex,year) %>%
   ggplot(aes(x = year, y = n, color = name))+
     geom_line()+
     facet_grid(~sex)
@@ -158,10 +179,23 @@ gender_plot <- gender %>%
   geom_line(size = 2)+
   xlab("Year") +  # X axis label
   ylab("Number of People Born") +  # Y axis label  
-  ggtitle("Number of Individuals Born\nIn the US Each Year (1880-2015)") + scale_y_continuous(expand=c(0,0)) # Plot title
+  ggtitle("Number of Individuals Born\nIn the US Each Year (1880-2015)") + # Plot title
+  scale_y_continuous(expand=c(0,0))
+
 
 gender_plot + facet_grid(~sex)
 
+r_workshop_names <- c("Meredith","Keara", "Holden", "Jarryd", "Wajid", "Laura",
+                      "Ted", "Chao", "Lucas", "Viviana", "Laura", "Viviana", 
+                      "Heather", "Paula", "Rajnessh", "Paulo", "Reid", "Safa",
+                      "John", "Anna","Sean","Liang", "Amrita", "Kibrom", "Sarika",
+                      "Daniel", "Justin", "Ana Maria", "Pamela", "Rebekah", "Fani", "Lauren")
+
+df %>% 
+  filter( name %in% r_workshop_names) %>% 
+  ggplot(aes(x = year , y = n, color = sex))+
+  geom_line()+
+  facet_grid(~name)
 
 # Iris Data Set -----------------------------------------------------------
 iris <- iris
@@ -177,13 +211,13 @@ iris %>%
 df1 <- diamonds
 
 df1 %>%
+  ggplot()+
+  geom_point(aes(x = carat, y = price, color = cut))+
+  facet_wrap(~cut)
+
+df1 %>%
 ggplot(aes(x = carat, y = price, color = cut)) +
   geom_point() +
   facet_grid(color~cut)
 
-
-df1 %>%
-  ggplot()+
-  geom_point(aes(x = carat, y = price, color = cut))+
-  facet_grid(~cut)
 
