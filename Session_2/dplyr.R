@@ -15,24 +15,30 @@ airlines <- airlines
 
 # Filter ------------------------------------------------------------------
 
-UA <- flights %>%
-  filter(carrier == "UA")
+flights %>%
+  filter(month == "2")
 
-may_9 <- flights %>% 
-  filter(month == "5" & day == "9")
+# May 9th flights
+may9 <- flights %>% 
+  filter( month == 5 & day == 9)
 
+# jan feb flights
 jan_feb <- flights %>% 
   filter(month %in% c("1","2"))
 
 flights %>% 
-  filter(dest %in% c("LAX","SFO"))
+  filter(dest %in% c("SFO","LAX"))
 
 flights %>% 
-  filter(arr_delay>60)
+  filter(arr_delay > 60 | dep_delay >10)
 
-early_flights <- flights %>% 
-  filter(sched_dep_time >= 2400 | # | is 'or' , is 'and' & is 'and'
-         sched_arr_time <= 600)
+flights %>% 
+  filter(arr_delay > 60 & dep_delay >10)
+
+
+flights %>%
+  filter(sched_dep_time >= 0000 | 
+         sched_dep_time <= 600)
 
 # Select ------------------------------------------------------------------
 
@@ -53,35 +59,24 @@ flights %>%
 
 # Mutate ------------------------------------------------------------------
 
-speed <-flights %>%
-  mutate( mph = distance/ (air_time/60)) %>% 
-  arrange(desc(mph))
+flights1 <- flights %>%
+  mutate(speed = distance/air_time) %>% 
+  select(speed, year:time_hour)
 
-flights %>%
-  filter(month == "11" & origin == "JFK") %>% 
+flights2 <- flights %>%
+  filter(month == 11 & origin == "JFK") %>% 
   arrange(desc(dep_delay))
 
-flights %>%
+flights3 <- flights %>%
   filter(origin == "LGA" & dest == "DTW") %>% 
-  arrange(arr_delay)
-
+  arrange(desc(arr_delay))
 
 
 # Group by and Summarise --------------------------------------------------
 
-flights %>% 
-  filter(month == 12) %>% 
-  group_by(origin) %>% 
-  summarise(N_flights = length(flight))
-
-flights %>% 
-  group_by(origin) %>% 
-  summarise(N_airlines = n_distinct(carrier))
-
-flights %>% 
-  filter(origin == "EWR" & carrier == "UA" & dest == "ORD") %>%
-  summarise(N_flights = length(flight))
-  
+flights %>%
+  group_by(origin,month,day) %>% 
+  summarize(Number_of_flights = length(origin))
 
 
 # Joins -------------------------------------------------------------------
@@ -114,7 +109,6 @@ delays %>%
   geom_point(aes(size = count, alpha = 1/3))+
   geom_smooth(se = FALSE)
 
-# Run all these before you run line 124-131
 flights$month <- as.factor(flights$month)
 flights$carrier <- as.factor(flights$carrier)
 flights$origin <- as.factor(flights$origin)
