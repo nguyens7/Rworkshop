@@ -4,9 +4,11 @@ graphics.off()
 
 # Load libraries
 library(plotly)
+library(cowplot)
 library(tidyverse)
 library(gapminder)
 library(nycflights13)
+
 
 # Load gapminder data
 data <- gapminder
@@ -56,7 +58,7 @@ plot
 
 # Easily add titles and label axes
 plot + 
-  ggtitle("Life Expectancy vs. GDP per Capita") +
+  ggtitle("Life Expectancy vs. GDP per Capita\n") +
   xlab("GDP per Capita") +
   ylab("Average Life Expectancy")
   
@@ -84,15 +86,20 @@ ggplotly(p1)
 
 # Plotting life expectancy of European countries in 2007
 data %>%
-  filter(continent == "Europe" & year == "2007") %>% 
-  ggplot(aes(x = lifeExp, y = country))+
+  filter(continent == "Asia" & year == 1992) %>% 
+  ggplot(aes(x = lifeExp, y = reorder(country,lifeExp)))+
   geom_point()
 
 # Reorder y values by lifeExp
-data %>%
-  filter(continent == "Europe" & year == "2007") %>% 
-  ggplot(aes(x = lifeExp, y = reorder(country,lifeExp)))+
+life_plot <- data %>%
+  filter(continent %in% c("Europe", "Africa") & year == 2007) %>% 
+  ggplot(aes(x = lifeExp, y = reorder(country,lifeExp), color = continent))+
   geom_point()
+
+
+life_plot+
+  facet_wrap(~continent)
+
 
 # Africa Life expectancy in 2007
 data %>%
@@ -102,8 +109,11 @@ data %>%
   ggtitle("Life Expetency of African Countries in 2007")+
   xlab("Life Expectancy") + ylab("Countries")
 
-# Plot Asian population in 1992
 
+data %>%
+  filter(year == 2002 & continent %in% c("Americas", "Europe")) %>% 
+  ggplot(aes(x = lifeExp, y = reorder(country,lifeExp))) +
+  geom_point()
 
 # Gapminder GDP -----------------------------------------------------------
 

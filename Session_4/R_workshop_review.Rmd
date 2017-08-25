@@ -1,0 +1,196 @@
+---
+title: "R workshop review"
+author: "Sean Nguyen"
+output:
+  html_document:
+    df_print: paged
+    theme: flatly
+  html_notebook: default
+  pdf_document: default
+---
+
+
+#Load libraries
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(cowplot)
+library(broom)
+library(ggsci)
+```
+# Import data
+```{r}
+file <- "https://raw.githubusercontent.com/nguyens7/nguyens7.github.io/master/data/Antibiotics.csv"
+data <- read_csv(file)
+
+data  
+
+dim(data)
+head(data)
+```
+
+
+
+# Data munging
+```{r}
+
+# Making wide format into long format
+data1 <- data %>% 
+  gather(Bacteria, Count, 2:10)
+
+# Separate the Bacteria Column into Experiment and Organism
+data2 <- data1 %>% 
+  separate(Bacteria, into = c("Experiment", "Organism"),
+           sep = "_")
+
+# Make the Treatment and Organism columns as categorical 'factors'
+
+str(data2)
+
+data2$Treatment <- as.factor(data2$Treatment)
+data2$Experiment <- as.factor(data2$Experiment)
+
+
+data3 <- data2 %>% 
+  mutate_at(vars(Treatment:Organism),as.factor)
+
+# Average within each experimental replicate
+data4 <-  data3 %>% 
+   group_by(Experiment,Organism,Treatment) %>% 
+   summarise( N = length(Count),
+          mean  = mean(Count),
+             sd = sd(Count),
+             se = sd/sqrt(N))
+
+
+# write_csv(data4,"experimental_summary.csv")
+```
+
+
+
+```{r}
+# Average all the experiments ---------------------------------------------
+
+data5 <- data4 %>% 
+ group_by(Organism,Treatment) %>% 
+  summarise( avg_N   = length(mean),
+             average = mean(mean),
+             avg_sd  = sd(mean),
+             avg_se  = avg_sd/sqrt(avg_N))
+data5  
+
+# write_csv(data5,"final_summary.csv")
+```
+
+
+#Graphing 
+
+
+```{r}
+# Boxplot of all data 
+boxplot <- data3 %>% 
+  group_by(Treatment, Organism) %>% 
+  ggplot(aes(x = Organism, y = Count, color = Organism))+
+  geom_boxplot(colour="black", fill=NA) + 
+  geom_point(position= 'jitter', size=2) +
+  ylab("\nColony Count\n") + # Y axis label
+  ggtitle("Effect of Antibiotic on Bacterial Growth") + #title
+  facet_wrap(~Treatment)
+
+boxplot <- boxplot + scale_color_npg()
+
+# ggsave("boxplot.png")
+# 
+# ggsave(plot = boxplot, "hi_res_boxplot.png", dpi = 600, units = "in", height = 4, width = 6)
+```
+
+
+
+
+```{r}
+
+# Bar graph of experiments
+Experimental_Replicates <- data4 %>% 
+  ggplot(aes(x=Organism,y=mean,fill=Treatment))+
+  geom_col(position="dodge")+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.4, 
+                size=0.8, colour="black", position=position_dodge(.9)) + #error bars
+  scale_y_continuous(expand=c(0,0))+ #set bottom of graph
+  xlab("Organism") + # X axis label
+  ylab("\nColony Count\n") + # Y axis label
+  ggtitle("Effect of Antibiotic on Bacterial Growth")+ #title
+  facet_wrap(~Experiment)
+
+Experimental_Replicates + scale_fill_aaas()
+```
+
+```{r}
+# Final graph
+Final_plot <- data5 %>% 
+  ggplot(aes(x=Organism,y=average,fill=Treatment))+
+  geom_col(position="dodge")+
+  geom_errorbar(aes(ymin=average-avg_se, ymax=average+avg_se), width=.4, 
+                size=0.8, colour="black", position=position_dodge(.9)) + #error bars
+  scale_y_continuous(expand=c(0,0))+ #set bottom of graph
+  xlab("Organism") + # X axis label
+  ylab("\nColony Count\n") + # Y axis label
+  ggtitle("Effect of Antibiotic on Bacterial Growth")
+
+Final_plot
+```
+
+#Statistics
+```{r}
+# Parametric Test
+shapiro <- shapiro.test(data3$Count)
+normal <- tidy(shapiro)
+# Fail to reject Ho -> data is normal
+```
+
+
+```{r}
+# ANOVA
+ANOVA <- aov(mean~(Organism*Treatment), data=data4)
+
+ANOVA_df <- ANOVA %>% 
+  tidy()
+```
+
+```{r}
+# Tukey HSD
+HSD <- TukeyHSD(ANOVA)
+
+tukey <- HSD %>% 
+  tidy()
+
+tukey
+```
+
+
+```{r}
+# Aggregate significant results
+sig.tukey <- tukey %>% 
+  filter(adj.p.value<0.05) %>% 
+  arrange(adj.p.value)
+sig.tukey
+```
+
+#Advanced stats
+```{r}
+
+# Multiple T-tests --------------------------------------------------------
+
+data4 %>% 
+  group_by(Organism) %>% 
+  nest() %>% 
+  mutate( t_test = map(data, ~t.test(mean~Treatment, data = .))) %>% 
+  unnest(map(t_test,tidy))
+```
+
+
+
+
+
+
+
+
+

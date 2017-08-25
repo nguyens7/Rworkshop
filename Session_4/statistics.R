@@ -48,3 +48,5 @@ tidy(ANOVA)
 
 TukeyHSD(ANOVA)
 
+tidy(TukeyHSD(ANOVA))
+
