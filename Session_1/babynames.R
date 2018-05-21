@@ -1,7 +1,3 @@
-# To Clear working environment
-rm(list=ls())
-graphics.off()
-
 # Load libraries
 library(babynames)
 library(tidyverse)
@@ -185,17 +181,15 @@ gender_plot <- gender %>%
 
 gender_plot + facet_grid(~sex)
 
-r_workshop_names <- c("Meredith","Keara", "Holden", "Jarryd", "Wajid", "Laura",
-                      "Ted", "Chao", "Lucas", "Viviana", "Laura", "Viviana", 
-                      "Heather", "Paula", "Rajnessh", "Paulo", "Reid", "Safa",
-                      "John", "Anna","Sean","Liang", "Amrita", "Kibrom", "Sarika",
-                      "Daniel", "Justin", "Ana Maria", "Pamela", "Rebekah", "Fani", "Lauren")
+r_workshop_names <- c("Anne-Sophie", "David", "Kyle","Keren","Nicholas", "Zoe", "Jacob", "Laura", "Siomara",
+                      "Irving", "Kaitlyn", "Emily", "Kevin", "Faryal", "Justin", "Aaron", "Jose", "Kirti",
+                      "Thomas", "Wei", "Chunqiu", "Kayla", "Hossein", "Pedro")
 
 df %>% 
   filter( name %in% r_workshop_names) %>% 
-  ggplot(aes(x = year , y = n, color = sex))+
+  ggplot(aes(x = year , y = n, color = name))+
   geom_line()+
-  facet_grid(~name)
+  facet_grid(~sex)
 
 # Iris Data Set -----------------------------------------------------------
 iris <- iris

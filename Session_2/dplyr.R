@@ -1,7 +1,3 @@
-# To Clear working environment
-rm(list=ls())
-graphics.off()
-
 # Load libraries
 library(cowplot)
 library(tidyverse)
@@ -19,26 +15,21 @@ flights %>%
   filter(month == "2")
 
 # May 9th flights
-may9 <- flights %>% 
-  filter( month == 5 & day == 9)
+flights %>% 
+  
 
 # jan feb flights
-jan_feb <- flights %>% 
-  filter(month %in% c("1","2"))
-
 flights %>% 
-  filter(dest %in% c("SFO","LAX"))
-
+  
+# Flights to LAX and SFO
 flights %>% 
-  filter(arr_delay > 60 | dep_delay >10)
-
+  
+# Flights delayed by >60 min
 flights %>% 
-  filter(arr_delay > 60 & dep_delay >10)
-
-
-flights %>%
-  filter(sched_dep_time >= 0000 | 
-         sched_dep_time <= 600)
+  
+# Flights that departed between 12am and 6am
+flights %>% 
+  
 
 # Select ------------------------------------------------------------------
 
@@ -59,17 +50,14 @@ flights %>%
 
 # Mutate ------------------------------------------------------------------
 
+# Computer mph from distance and air_time columns
 flights1 <- flights %>%
-  mutate(speed = distance/air_time) %>% 
-  select(speed, year:time_hour)
 
+# Longest flight delay from JFK in November
 flights2 <- flights %>%
-  filter(month == 11 & origin == "JFK") %>% 
-  arrange(desc(dep_delay))
 
+# LGA flights that arrived early to DTW
 flights3 <- flights %>%
-  filter(origin == "LGA" & dest == "DTW") %>% 
-  arrange(desc(arr_delay))
 
 
 # Group by and Summarise --------------------------------------------------

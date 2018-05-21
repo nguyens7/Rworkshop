@@ -19,7 +19,7 @@ library(ggsci)
 ```
 # Import data
 ```{r}
-file <- "https://raw.githubusercontent.com/nguyens7/nguyens7.github.io/master/data/Antibiotics.csv"
+file <- "https://raw.githubusercontent.com/nguyens7/Rworkshop/master/Session_2/Antibiotics.csv"
 data <- read_csv(file)
 
 data  
@@ -61,6 +61,7 @@ data4 <-  data3 %>%
              sd = sd(Count),
              se = sd/sqrt(N))
 
+data4
 
 # write_csv(data4,"experimental_summary.csv")
 ```
@@ -70,13 +71,7 @@ data4 <-  data3 %>%
 ```{r}
 # Average all the experiments ---------------------------------------------
 
-data5 <- data4 %>% 
- group_by(Organism,Treatment) %>% 
-  summarise( avg_N   = length(mean),
-             average = mean(mean),
-             avg_sd  = sd(mean),
-             avg_se  = avg_sd/sqrt(avg_N))
-data5  
+data5
 
 # write_csv(data5,"final_summary.csv")
 ```
@@ -92,11 +87,15 @@ boxplot <- data3 %>%
   ggplot(aes(x = Organism, y = Count, color = Organism))+
   geom_boxplot(colour="black", fill=NA) + 
   geom_point(position= 'jitter', size=2) +
-  ylab("\nColony Count\n") + # Y axis label
-  ggtitle("Effect of Antibiotic on Bacterial Growth") + #title
+  labs( title = "Effect of Antibiotic on Bacterial Growth",
+        y = "\nColony Count\n") +
   facet_wrap(~Treatment)
 
+boxplot
+
 boxplot <- boxplot + scale_color_npg()
+
+boxplot
 
 # ggsave("boxplot.png")
 # 
@@ -115,9 +114,9 @@ Experimental_Replicates <- data4 %>%
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.4, 
                 size=0.8, colour="black", position=position_dodge(.9)) + #error bars
   scale_y_continuous(expand=c(0,0))+ #set bottom of graph
-  xlab("Organism") + # X axis label
-  ylab("\nColony Count\n") + # Y axis label
-  ggtitle("Effect of Antibiotic on Bacterial Growth")+ #title
+  labs( title = "Effect of Antibiotic on Bacterial Growth",
+        x = "Organism",
+        y = "\nCOlony Count\n") +
   facet_wrap(~Experiment)
 
 Experimental_Replicates + scale_fill_aaas()
@@ -131,18 +130,61 @@ Final_plot <- data5 %>%
   geom_errorbar(aes(ymin=average-avg_se, ymax=average+avg_se), width=.4, 
                 size=0.8, colour="black", position=position_dodge(.9)) + #error bars
   scale_y_continuous(expand=c(0,0))+ #set bottom of graph
-  xlab("Organism") + # X axis label
-  ylab("\nColony Count\n") + # Y axis label
-  ggtitle("Effect of Antibiotic on Bacterial Growth")
+  labs( title = "Effect of Antibiotic on Bacterial Growth",
+        x = "Organism",
+        y = "\nCOlony Count\n")
 
 Final_plot
 ```
+
+```{r}
+data4 %>% 
+  ggplot(aes(x = Organism, y = mean, fill = Treatment)) +
+  geom_boxplot() + 
+  geom_point(position = position_jitterdodge()) +
+  labs(title = "Effect of Antiobiotic on Bacterial Growth",
+       x = "Organism",
+       y = "\nColony Count\n")
+
+```
+
+Adjust tick marks
+```{r}
+data4 %>% 
+  ggplot(aes(x = Organism, y = mean, fill = Treatment)) +
+  geom_boxplot() + 
+  geom_point(position = position_jitterdodge()) +
+  scale_y_continuous(breaks = seq(150,400,50)) +
+  labs(title = "Effect of Antiobiotic on Bacterial Growth",
+       x = "Organism",
+       y = "\nColony Count\n")
+
+```
+
+
+Adjust limits
+```{r}
+
+data4 %>% 
+  ggplot(aes(x = Organism, y = mean, fill = Treatment)) +
+  geom_boxplot() + 
+  geom_point(position = position_jitterdodge()) +
+  scale_y_continuous(breaks = seq(150,400,50),
+                     limits = c(150,400)) +
+  labs(title = "Effect of Antiobiotic on Bacterial Growth",
+       x = "Organism",
+       y = "\nColony Count\n")
+
+
+```
+
 
 #Statistics
 ```{r}
 # Parametric Test
 shapiro <- shapiro.test(data3$Count)
-normal <- tidy(shapiro)
+
+tidy(shapiro)
 # Fail to reject Ho -> data is normal
 ```
 
@@ -153,6 +195,8 @@ ANOVA <- aov(mean~(Organism*Treatment), data=data4)
 
 ANOVA_df <- ANOVA %>% 
   tidy()
+
+ANOVA_df
 ```
 
 ```{r}

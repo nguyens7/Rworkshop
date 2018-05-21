@@ -1,7 +1,10 @@
 # Rworkshop
 Repository for an introduction to R workshop series.  This series is for anyone who has an interest in learning how to program in R.  No previous coding experience knowledge is required. 
 
-![Flyer](https://github.com/nguyens7/Rworkshop/blob/master/RWorkshop_flyer.png?raw=true)
+
+<img src="https://raw.githubusercontent.com/nguyens7/Rworkshop/master/Rworkshop_Flyer.png" width="350">
+ 
+
 
 ## Organization
 The workshop is organized into four sessions and the content from each session is contained within the respective folders. Session topics are as follows:
