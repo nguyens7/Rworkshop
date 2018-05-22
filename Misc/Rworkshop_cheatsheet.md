@@ -30,7 +30,7 @@
 # Markdown
  An elegant way to format text using plain text. Use this to format R markdown documents.  
  
-####Markdown editors
+#### Markdown editors
 **Windows** - markdowndownpad   
 **MacOS** - macdown
 
@@ -42,20 +42,20 @@
 
 
  
-`#Biggest header`  
-#Biggest header  
+`# Biggest header`  
+# Biggest header  
 
 
-`##Big header`  
-##Big header
+`## Big header`  
+## Big header
 
-`###Smaller header`   
+`### Smaller header`   
  
-###Smaller header
+### Smaller header
 
 
-`####Even smaller`  
-####Even smaller
+`#### Even smaller`  
+#### Even smaller
 
 
 
