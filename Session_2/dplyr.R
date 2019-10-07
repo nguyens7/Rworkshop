@@ -1,13 +1,10 @@
 # Load libraries
-library(cowplot)
 library(tidyverse)
 library(nycflights13)
 
 # Load in data from nycflights13
 flights <- flights
-planes <- planes
 weather <- weather
-airlines <- airlines
 
 # Filter ------------------------------------------------------------------
 
@@ -38,7 +35,7 @@ flights_small <- flights %>%
 
 # Rename ------------------------------------------------------------------
 
-flights1 <- flights %>% 
+flights %>% 
   rename(date_time_hour = time_hour)
  
 
@@ -65,6 +62,17 @@ flights3 <- flights %>%
 flights %>%
   group_by(origin,month,day) %>% 
   summarize(Number_of_flights = length(origin))
+
+# Most flights in December
+Dec_flights <- flights %>% 
+  
+  
+# NYC airport with most airlines
+Most_airlines <- flights %>% 
+  
+# Number of UA flights departing JFK to ORD
+UA_JFK_ORD <- flights %>% 
+
 
 
 # Joins -------------------------------------------------------------------
@@ -97,18 +105,4 @@ delays %>%
   geom_point(aes(size = count, alpha = 1/3))+
   geom_smooth(se = FALSE)
 
-flights$month <- as.factor(flights$month)
-flights$carrier <- as.factor(flights$carrier)
-flights$origin <- as.factor(flights$origin)
-flights$dest <- as.factor(flights$dest)
-
-# Calculates the number of flights for each carrier to LAX and SFO for the three airports
-flights %>% 
-  filter(dest %in% c("LAX", "SFO")) %>% 
-  group_by(month,dest,carrier,origin) %>% 
-  summarise(n = length(month)) %>% 
-  ggplot(aes(x = month, y = n, color = carrier, group = carrier, shape = dest))+
-  geom_point(size = 4)+
-  geom_line(size = 2)+
-  facet_grid(origin~dest)
 
