@@ -1,0 +1,209 @@
+---
+title: "R-Ladies East Lansing"
+subtitle: dplyr key
+output: html_document
+---
+
+
+## Load libraries
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(nycflights13)
+```
+
+### Import data
+```{r}
+flights <- flights
+flights
+
+weather <- weather
+weather
+```
+
+We can take a look at our data using the `head()` command.
+```{r}
+head(flights) 
+```
+
+### Using `filter()` to isolate rows based off of values
+
+
+Find all flights departing May 9th
+```{r}
+may_9 <- flights %>% 
+  filter(month == 5 & day == 9)
+
+may_9
+```
+
+Find all flights in January and February
+```{r}
+jan_feb <- flights %>% 
+  filter(month %in% c("1", "2"))
+
+jan_feb
+```
+
+
+Find all flights to LAX and SFO.
+```{r}
+LAX_SFO <- flights %>% 
+  filter(dest %in% c("SFO", "LAX"))
+
+LAX_SFO
+```
+
+
+Find all flights delayed by > 60min.
+
+```{r}
+flights %>% 
+  filter(arr_delay >60)
+```
+
+Find allflights that departed between 12 am and 6 am.
+
+```{r}
+early_flights <- flights %>% 
+  filter(sched_dep_time >= 2400 |
+         sched_dep_time <= 600 )
+
+early_flights
+```
+
+
+
+
+### Using `arrange()` to sort rows
+
+
+We can use `arrange()` to sort alphabetically.
+```{r}
+flights %>% 
+  arrange(dest)
+```
+
+We can use `arrange()` to sort numeric values.
+```{r}
+flights %>% 
+  arrange(air_time)
+```
+
+We can use `desc()` to sort in descending order.
+```{r}
+flights %>% 
+  arrange(desc(air_time))
+```
+
+
+
+### Using `mutate()` to add a new column from existing data.
+This function is great for performing calculations.
+
+
+
+Create a new column named `speed` to calculate miles per hour (using `times` and `miles` columns.
+
+```{r}
+speed <- flights %>% 
+  mutate(speed = distance/(air_time/60)) %>% 
+  arrange(desc(speed))
+
+speed
+```
+
+
+What was the longest flight delay in JFK in November?
+
+```{r}
+flights %>% 
+  filter(month == 11 & origin == "JFK") %>% 
+  arrange(desc(dep_delay))
+```
+
+
+Which flights departed from LGA arrived to DTW early?
+
+```{r}
+flights %>% 
+  filter(origin == "LGA" & dest == "DTW") %>% 
+  arrange(arr_delay)
+```
+
+
+
+Using `group_by()` and `summarize` to aggregate data.
+
+We can combine multiple rows of data into a single value using `group-by` and `summarize`. 
+
+
+Which airport had the most flights in December?
+
+```{r}
+flights %>% 
+  filter(month == 12) %>% 
+  group_by(origin) %>% 
+  summarise(N_flights = length(flight))
+```
+
+
+Which NYC airport has the most airlines?
+
+```{r}
+flights %>% 
+  group_by(origin) %>% 
+  summarise(N_airlines = n_distinct(carrier))
+```
+
+
+How many United Airlines flights depart from JFK to ORD?
+```{r}
+flights %>% 
+  filter(origin == "EWR" & carrier == "UA" & dest == "ORD") %>%
+  summarise(N_flights = length(flight))
+```
+
+
+### Joining data
+We can use `inner_join()` to combine data based off of similar values.
+
+
+```{r}
+weather_flights <- flights %>% 
+  inner_join(weather)
+
+weather_flights
+```
+
+
+
+### Advanced dplyr
+
+We can combined what we've learned to answer some interesting questions.
+
+
+Is there a relationship between flight arrival delay and overall trip distance? Or put more simply, Do longer distance flights have a shorter or longer arrival delay?
+
+To answer this question we can aggregate the data using `group-by()` to group by destination and then use `summarize()` to aggregate the number of flights, mean distance and arrival delay. We next can use `filter()` to get the top 10 flights and since Hawaii is far from NYC we can omit it as well.
+
+We can then use ggplot to plot the data.  We can make the `x axis` distance, the `y axis` arrival delay and the total number of flights the `size`.  We can also use `geom_smooth()` to fit a linear model to the data.
+
+```{r}
+# Code adapted from Hadley Wickham
+
+delays <- flights %>%
+  group_by(dest) %>% 
+  summarise( count = n(),
+             dist = mean(distance, na.rm = TRUE),
+             delay = mean (arr_delay, na.rm = TRUE)) %>% 
+  filter(count > 20 & dest != "HNL")
+
+
+
+delays %>% 
+  ggplot(aes(x= dist, y= delay))+
+  geom_point(aes(size = count, alpha = 1/3))+
+  geom_smooth(se = FALSE)
+```
+
+We can see that it appears that there is a slight increase in arrival delays for shorter flights but the delay decreases as you increase the trip distance.  
