@@ -1,6 +1,5 @@
 # Load libraries
 library(plotly)
-library(cowplot)
 library(tidyverse)
 library(gapminder)
 library(nycflights13)
@@ -8,6 +7,15 @@ library(nycflights13)
 
 # Load gapminder data
 data <- gapminder
+
+
+# ggplot
+data %>% 
+  ggplot()
+
+
+data %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp))
 
 # Basic scatter plot
 data %>%
@@ -88,9 +96,9 @@ data %>%
 data %>%
 
 
-
 # GDP of Americas and Europe in 2002
 data %>%
+  
 
 # GDP of each continent in 2007
   
@@ -140,71 +148,20 @@ data %>%
   geom_jitter(width = 0.2) +
   geom_violin(fill = NA)
 
-# Interactive plot
-gdp_plot <- data %>%
-  ggplot(aes(x = continent, y = gdpPercap, color = continent, frame = year)) +
-  geom_jitter(width = 0.2) +
+# Adjust alpha
+data %>%
+  filter(year == "2007") %>% 
+  ggplot(aes(x = continent, y = gdpPercap, color = continent)) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
   geom_violin(fill = NA)
 
+# Interactive plot
+gdp_plot <- data %>%
+  ggplot(aes(x = continent, y = gdpPercap, color = continent, frame = year, id = country)) +
+  geom_jitter(width = 0.2, alpha = 0.5) 
+
+
 ggplotly(gdp_plot)
-
-
-# US Dental Schools -------------------------------------------------------
-dentalschools <- ("https://raw.githubusercontent.com/nguyens7/Rworkshop/master/Session_3/dentalschools.csv")
-
-# Read .csv file
-schools <- read_csv(dentalschools)
-
-# Look at data structure
-str(schools)
-
-# Change USDentalSchools to factor
-schools$USDentalSchools <- as.factor(schools$USDentalSchools)
-
-# Plot schools
-schools %>% 
-  ggplot(aes(x = AverageDAT, y = AverageGPA)) +
-  geom_point()
-
-# Add title and label axes
-schools %>% 
-  ggplot(aes(x = AverageDAT, y = AverageGPA, color = USDentalSchools)) +
-  geom_point() +
-  labs(title = "US Dental School Average DAT and GPA",
-       x = "Average DAT Score",
-       y = "Average GPA")
-
-# Remove legend
-school_plot <- schools %>% 
-  ggplot(aes(x = AverageDAT, y = AverageGPA, color = USDentalSchools)) +
-  geom_point() +
-  labs(title = "US Dental School Average DAT and GPA",
-       x = "Average DAT Score",
-       y = "Average GPA") +
-  guides(color = FALSE) #removes legend
-
-school_plot
-  
-
-
-
-#Annotate percentiles and add text
-school_plot <- schools %>% 
-  ggplot(aes(x = AverageDAT, y = AverageGPA, color = USDentalSchools))+
-  geom_point()+
-  ggtitle("US Dental School Average DAT and GPA")+
-  xlab("Average DAT Score")+
-  ylab("Average GPA")+
-  guides(color = FALSE)+
-  annotate("rect", xmin = 22, xmax = 23, ymin = 3.2, ymax = 3.85, alpha =0.1, fill = "red") +
-  annotate("text", x = 22.5, y = 3.75, label = "98th Percentile")+
-  annotate("rect", xmin = 19, xmax = 20, ymin = 3.2, ymax = 3.85, alpha =0.1, fill = "blue") +
-  annotate("text", x = 19.5, y = 3.75, label = "75th Percentile")+
-  annotate("rect", xmin = 17, xmax = 18, ymin = 3.2, ymax = 3.85, alpha =0.1, fill = "green") +
-  annotate("text", x = 17.5, y = 3.75, label = "50th Percentile")
-
-# Make it interactive
-ggplotly(school_plot)
 
 
 # nycflights data ---------------------------------------------------------
